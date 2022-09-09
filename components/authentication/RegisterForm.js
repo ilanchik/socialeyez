@@ -13,6 +13,9 @@ import { ref, set, push } from 'firebase/database'
 
 const RegisterForm = () => {
 
+    // Set navigation
+    const navigation = useNavigation();
+
     // Set login schema (Formik and Yup)
     const registerFormSchema = Yup.object().shape({
         email: Yup.string().email().required("An email is required"),
@@ -31,6 +34,7 @@ const RegisterForm = () => {
         try {
             const authUser = await createUserWithEmailAndPassword(auth, email, password);
             console.log('Registration SUCCESSFUL', email);
+            navigation.replace('Home');
 
             // Add to firestore database
             /*const dbRef = collection(db, 'users');
@@ -54,8 +58,6 @@ const RegisterForm = () => {
         }
     }
 
-    // Set navigation
-    const navigation = useNavigation();
     return (
         <View style={{ width: '100%', padding: 10 }}>
             <Formik

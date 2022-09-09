@@ -1,10 +1,13 @@
 import { StyleSheet, Text, View, Image, TextInput, Button } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import { Divider } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import { auth, database } from '../../firebase';
+import { child, onValue, push, ref, update } from 'firebase/database';
 
+// Use image for testing purposes
 const placeHolderImage = require('../../assets/back1.png');
 
 // Schema for what is allowed and not allowed
@@ -16,16 +19,58 @@ const uploadPostSchema = Yup.object().shape({
 const FormikPostUploader = () => {
 
     const [thumbnailUrl, setThumbnailUrl] = useState(placeHolderImage);
+    const [currentLoggedInUser, setCurrentLoggedInUser] = useState(null);
 
+    // Navigation
     const navigation = useNavigation();
+
+    // Get current user's username and profile picture
+    const getUser = () => {
+        const user = auth.currentUser.uid;
+        return onValue(ref(database, 'users/' + user), (snapshot) => {
+            setCurrentLoggedInUser({
+                username: snapshot.val().username,
+                profile_picture: snapshot.val().profile_picture,
+            })
+        })
+    }
+
+    useEffect(() => {
+        getUser();
+    }, [])
+
+    // Upload post to database
+    const uploadPost = async (imageUrl, caption) => {
+        const postData = {
+            imageUrl: imageUrl,
+            username: currentLoggedInUser.username,
+            profile_picture: currentLoggedInUser.profile_picture,
+            publisher_uid: auth.currentUser.uid,
+            caption: caption,
+            date_created: new Date().toLocaleString(),
+            date_updated: new Date().toLocaleString(),
+            likes: 0,
+            likes_by_users: [],
+            comments: [
+                { username: 'ilanchik', comment: 'wow' },
+                { username: 'ilanchik', comment: 'wow' },
+                { username: 'ilanchik', comment: 'wow' },
+            ],
+        }
+
+        const newPostKey = push(child(ref(database), 'posts')).key;
+        const updates = {};
+        updates['/posts/' + newPostKey] = postData;
+        updates['users/' + auth.currentUser.uid + '/posts/' + newPostKey] = { postId: newPostKey };
+
+        return update(ref(database), updates).then(() => navigation.goBack());
+    }
 
     return (
         <Formik
             initialValues={{ caption: '', imageUrl: '' }}
             onSubmit={(values) => {
-                console.log(values);
-                console.log("Successful upload");
-                navigation.goBack();
+                uploadPost('https://randomuser.me/api/portraits/men/32.jpg', values.caption);
             }}
             validationSchema={uploadPostSchema}
             validateOnMount={true} >

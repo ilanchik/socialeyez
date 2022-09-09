@@ -26,8 +26,8 @@ const PostHeader = ({ post }) => {
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 5, alignItems: 'center' }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Image source={post.profile_picture} style={styles.story} />
-        <Text style={{ color: 'white', marginLeft: 5, fontWeight: '700' }}>{post.user}</Text>
+        <Image source={{ uri: post.profile_picture }} style={styles.story} />
+        <Text style={{ color: 'white', marginLeft: 5, fontWeight: '700' }}>{post.username}</Text>
       </View>
 
       <Text style={{ color: 'white', fontWeight: '900' }}>...</Text>
@@ -40,7 +40,7 @@ const PostImage = ({ post }) => {
     <View
       style={{ width: '100%', height: 400 }} >
       <Image
-        source={() => (post.imageUrl)}
+        source={{ uri: post.imageUrl }}
         style={{ height: '100%', resizeMode: 'cover' }} />
     </View>
 
@@ -54,28 +54,32 @@ const PostFooter = ({ post }) => {
       <View style={styles.leftFooterIconsContainer}>
         <Icon
           imgStyle={styles.footerIcon}
-          img={require('../../assets/heart_outline.png')} />
+          img={require('../../assets/heart_outline.png')}
+          action={() => console.log('Like button pressed')} />
         <Icon
           imgStyle={styles.footerIcon}
-          img={require('../../assets/comment.png')} />
+          img={require('../../assets/comment.png')}
+          action={() => console.log('comment button pressed')} />
         <Icon
           imgStyle={styles.footerIcon}
-          img={require('../../assets/share.png')} />
+          img={require('../../assets/share.png')}
+          action={() => console.log('share button pressed')} />
       </View>
 
       <View style={{ flex: 1, alignItems: 'flex-end' }}>
         <Icon
           imgStyle={{ resizeMode: 'contain', width: 25, height: 33 }}
-          img={require('../../assets/save.png')} />
+          img={require('../../assets/save.png')}
+          action={() => console.log('save button pressed')} />
       </View>
 
     </View>
   )
 }
 
-const Icon = ({ imgStyle, img }) => {
+const Icon = ({ imgStyle, img, action }) => {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={action}>
       <Image style={imgStyle} source={img} />
     </TouchableOpacity>
   )
@@ -97,7 +101,7 @@ const Caption = ({ post }) => {
   return (
     <View style={{ marginTop: 5 }}>
       <Text style={{ color: 'white' }}>
-        <Text style={{ fontWeight: '600' }}>{post.user}</Text>
+        <Text style={{ fontWeight: '600' }}>{post.username}</Text>
         <Text> {post.caption}</Text>
       </Text>
     </View>
@@ -124,7 +128,7 @@ const Comments = ({ post }) => {
       {post.comments.map((comment, index) => (
         <View key={index} style={{ flexDirection: 'row', marginTop: 5 }}>
           <Text style={{ color: 'white' }}>
-            <Text style={{ fontWeight: '600' }}>{comment.user}</Text>
+            <Text style={{ fontWeight: '600' }}>{comment.username}</Text>
             {' '}{comment.comment}
           </Text>
         </View>

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { auth } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { AuthStack, HomeStack } from "./navigation/NavStacks";
+import { NavigationContainer } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 
@@ -19,7 +20,10 @@ const App = () => {
   }, []);
 
   return (
-    <>{currentUser ? <HomeStack /> : <AuthStack />}</>
+    <NavigationContainer>
+      {currentUser ? <HomeStack /> : <AuthStack />}
+    </NavigationContainer>
+
   );
 }
 

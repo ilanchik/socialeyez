@@ -1,14 +1,12 @@
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import MaskedView from '@react-native-masked-view/masked-view'
 import { LinearGradient } from 'expo-linear-gradient'
 import { auth } from '../firebase'
 import { database } from '../firebase'
 import { push, set, ref, update, child, onValue, onChildAdded } from 'firebase/database'
-
-const handleSignOut = () => {
-    auth.signOut().then(() => console.log("Signed out"))
-}
+import { useNavigation } from '@react-navigation/native'
+import { AuthStack } from '../navigation/NavStacks'
 
 /**
  * ************TESTING**************************
@@ -32,8 +30,18 @@ const testing = () => {
 
 }
 
-
 const Logo = ({ style, size }) => {
+
+    // Set navigation
+    const navigation = useNavigation();
+
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(true);
+
+    const handleSignOut = () => {
+        auth.signOut().then(() => console.log("Signed out"));
+        navigation.replace('AuthStack');
+    }
+
     return (
         <TouchableOpacity onPress={handleSignOut}>
             <MaskedView

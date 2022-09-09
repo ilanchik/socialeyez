@@ -13,37 +13,35 @@ const Stack = createStackNavigator();
 
 const AuthStack = () => {
     return (
-        <NavigationContainer>
-            <Stack.Navigator initialRouteName='LoginScreen' screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="LoginScreen" component={LoginScreen} />
-                <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-            </Stack.Navigator>
-        </NavigationContainer>
+
+        <Stack.Navigator initialRouteName='LoginScreen' screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="LoginScreen" component={LoginScreen} />
+            <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+        </Stack.Navigator>
     )
 }
 
 const HomeStack = () => {
     return (
-        <NavigationContainer>
-            <Stack.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="Home" component={Tabs} options={{ header: () => null }} />
-                <Stack.Screen
-                    name='MessagesScreen'
-                    component={MessagesScreen}
-                    options={{
-                        headerShown: true,
-                        headerStyle: { backgroundColor: 'black' },
-                        title: 'Messages',
-                        headerTintColor: 'white',
-                        headerBackTitleVisible: false,
-                        headerBackImage: () => (
-                            <Image
-                                style={{ height: 30, width: 50, margin: 5 }}
-                                source={require('../assets/back2.png')} />
-                        )
-                    }} />
-            </Stack.Navigator>
-        </NavigationContainer>
+        <Stack.Navigator initialRouteName='Home' screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Home" component={Tabs} options={{ header: () => null }} />
+            <Stack.Screen
+                name='MessagesScreen'
+                component={MessagesScreen}
+                options={{
+                    headerShown: true,
+                    headerStyle: { backgroundColor: 'black' },
+                    title: 'Messages',
+                    headerTintColor: 'white',
+                    headerBackTitleVisible: false,
+                    headerBackImage: () => (
+                        <Image
+                            style={{ height: 30, width: 50, margin: 5 }}
+                            source={require('../assets/back2.png')} />
+                    )
+                }} />
+            <Stack.Screen name='AuthStack' component={AuthStack} />
+        </Stack.Navigator>
     )
 }
 

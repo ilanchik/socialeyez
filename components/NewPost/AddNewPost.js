@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View, Button, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Button, Image, TouchableOpacity, TextInput } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import FormikPostUploader from './FormikPostUploader'
 import * as ImagePicker from 'expo-image-picker'
 import { Divider } from 'react-native-elements'
 import { ref, put, uploadBytes, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
-import { storage } from '../../firebase'
+import { storage, auth } from '../../firebase'
 
 
 const AddNewPost = () => {
@@ -98,7 +98,8 @@ const AddNewPost = () => {
 
     return (
         <View style={{ flex: 1 }}>
-            {/*<FormikPostUploader />*/}
+            <FormikPostUploader />
+            {/*}
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     style={styles.button}
@@ -115,11 +116,8 @@ const AddNewPost = () => {
             {image && <Image source={{ uri: image }} style={{ flex: 1 / 2, padding: 50 }} />}
             <Divider />
             <View>
-                <Text style={{ color: 'white' }} onPress={(uploadImage)} >Description</Text>
-            </View>
-
-
-
+                <TextInput style={{ color: 'white' }} multiline={true} numberOfLines={2} onPress={(uploadImage)} ></TextInput>
+    </View> */}
         </View >
     )
 }

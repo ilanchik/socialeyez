@@ -41,6 +41,7 @@ const LoginForm = () => {
         try {
             await signInWithEmailAndPassword(auth, email, password);
             console.log('Firebase login SUCCESSFUL', email);
+            navigation.replace('Home');
 
         } catch (error) {
             Alert.alert('Invalid Login', 'Invalid credentials\n' + error.message, [
