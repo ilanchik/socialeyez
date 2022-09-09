@@ -1,3 +1,8 @@
+WORK IN PROGRESS... (Updated 09/06/2022)
+Will update with current features, and additional features that will be implemented.
+
+-------------------------------------------------------------------------------------------------------
+
 # My Universal React Project
 
 <p>
