@@ -41,6 +41,8 @@ const FormikPostUploader = () => {
 
     // Upload post to database
     const uploadPost = async (imageUrl, caption) => {
+        const newPostKey = push(child(ref(database), 'posts')).key;
+
         const postData = {
             imageUrl: imageUrl,
             username: currentLoggedInUser.username,
@@ -49,16 +51,9 @@ const FormikPostUploader = () => {
             caption: caption,
             date_created: new Date().toLocaleString(),
             date_updated: new Date().toLocaleString(),
-            likes: 0,
-            likes_by_users: [],
-            comments: [
-                { username: 'ilanchik', comment: 'wow' },
-                { username: 'ilanchik', comment: 'wow' },
-                { username: 'ilanchik', comment: 'wow' },
-            ],
+            postId: newPostKey,
         }
 
-        const newPostKey = push(child(ref(database), 'posts')).key;
         const updates = {};
         updates['/posts/' + newPostKey] = postData;
         updates['users/' + auth.currentUser.uid + '/posts/' + newPostKey] = { postId: newPostKey };

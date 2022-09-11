@@ -8,6 +8,7 @@ import LoginScreen from '../screens/Authentication/LoginScreen';
 import RegisterScreen from '../screens/Authentication/RegisterScreen';
 import MessagesScreen from '../screens/MessagesScreen';
 import NewPostScreen from '../screens/NewPostScreen';
+import CommentsScreen from '../screens/CommentsScreen';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,22 @@ const HomeStack = () => {
                     )
                 }} />
             <Stack.Screen name='AuthStack' component={AuthStack} />
+            <Stack.Screen
+                name='Comments'
+                component={CommentsScreen}
+                options={{
+                    headerShown: true,
+                    headerStyle: { backgroundColor: 'black' },
+                    title: 'Comments',
+                    headerTintColor: 'white',
+                    headerBackTitleVisible: false,
+                    headerBackImage: () => (
+                        <Image
+                            style={{ height: 30, width: 50, margin: 5 }}
+                            source={require('../assets/back2.png')} />
+                    )
+                }}
+            />
         </Stack.Navigator>
     )
 }

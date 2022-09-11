@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, ScrollView, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Header from '../components/home/Header';
 import Stories from '../components/home/Stories';
@@ -6,41 +6,33 @@ import Post from '../components/home/Post';
 import { POSTS } from '../data/posts';
 import { auth, database } from '../firebase';
 import { useIsFocused } from '@react-navigation/native';
-import { child, onChildAdded, onValue, orderByKey, query, ref } from 'firebase/database';
+import { child, onChildAdded, onChildChanged, onValue, ref } from 'firebase/database';
 
 const HomeScreen = () => {
 
-    const focus = useIsFocused();
-
     const [posts, setPosts] = useState([]);
 
-    const getPosts = () => {
-        const dbRef = ref(database, 'posts');
-        return onChildAdded(dbRef, (data) => {
-            console.log(data.key);
-        })
-    }
-
-    const getPosts2 = async () => {
-        const user = auth.currentUser.uid;
-
+    const getPosts = async () => {
         const dbRef = child(ref(database), 'posts');
         var fetchData = [];
+        var fetchKey = [];
         onValue(dbRef, (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const key = childSnapshot.key;
                 const data = childSnapshot.val();
                 fetchData.push(data);
+                fetchKey.push(key);
             })
         })
         setPosts(fetchData);
     }
 
+    // Data load upon screen focus (neeed to update upon initial app render)
+    const focus = useIsFocused();
     useEffect(() => {
         if (focus === true) {
-            getPosts2();
+            getPosts();
         }
-        //getPosts();
     }, [focus]);
 
 
@@ -48,13 +40,11 @@ const HomeScreen = () => {
         <SafeAreaView style={styles.container}>
             <Header />
             <Stories />
-            <ScrollView>
-                {posts.map((post, index) => (
-                    <Post post={post} key={index} />
-                ))}
-
-            </ScrollView>
-
+            <FlatList
+                data={posts}
+                renderItem={({ item }) => <Post post={item} />}
+                contentContainerStyle={{ flexDirection: 'column-reverse' }}
+            />
         </SafeAreaView>
     )
 }

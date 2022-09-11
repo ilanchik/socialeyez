@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Divider } from 'react-native-elements'
-import { POSTS } from '../../data/posts'
+import { useNavigation } from '@react-navigation/native'
 
 const Post = ({ post }) => {
 
@@ -11,7 +11,7 @@ const Post = ({ post }) => {
       <PostHeader post={post} />
       <PostImage post={post} />
       <View style={{ marginHorizontal: 8, marginTop: 10 }}>
-        <PostFooter />
+        <PostFooter post={post} />
         <Likes post={post} />
         <Caption post={post} />
         <CommentsSection post={post} />
@@ -48,6 +48,9 @@ const PostImage = ({ post }) => {
 }
 
 const PostFooter = ({ post }) => {
+
+  const navigation = useNavigation();
+
   return (
     <View style={{ flexDirection: 'row' }}>
 
@@ -59,7 +62,7 @@ const PostFooter = ({ post }) => {
         <Icon
           imgStyle={styles.footerIcon}
           img={require('../../assets/comment.png')}
-          action={() => console.log('comment button pressed')} />
+          action={() => navigation.navigate('Comments', { post })} />
         <Icon
           imgStyle={styles.footerIcon}
           img={require('../../assets/share.png')}
@@ -90,7 +93,7 @@ const Likes = ({ post }) => {
     <View style={{ flexDirection: 'row', marginTop: 4 }}>
       <Text
         style={{ color: 'white', fontWeight: '600' }}>
-        {post.likes.toLocaleString('en')} likes
+        {post.likes ? post.likes.toLocaleString('en') : null} likes
       </Text>
     </View>
 
@@ -112,7 +115,7 @@ const Caption = ({ post }) => {
 const CommentsSection = ({ post }) => {
   return (
     <View style={{ marginTop: 5 }}>
-      {post.comments.length ? (
+      {post.comments ? (
         <Text style={{ color: 'gray' }}>
           View{post.comments.length > 1 ? ' all' : ''} {post.comments.length}{' '}
           {post.comments.length > 1 ? 'comments' : 'comment'}
@@ -125,14 +128,14 @@ const CommentsSection = ({ post }) => {
 const Comments = ({ post }) => {
   return (
     <>
-      {post.comments.map((comment, index) => (
+      {post.comments ? post.comments.map((comment, index) => (
         <View key={index} style={{ flexDirection: 'row', marginTop: 5 }}>
-          <Text style={{ color: 'white' }}>
+          <Text style={{ color: 'white', flex: 1 }}>
             <Text style={{ fontWeight: '600' }}>{comment.username}</Text>
             {' '}{comment.comment}
           </Text>
         </View>
-      ))}
+      )) : null}
     </>
 
   )
